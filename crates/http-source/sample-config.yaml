@@ -1,7 +1,7 @@
 meta:
   version: latest
   name: cat-facts
-  type: http-source
+  type: benmanns/http-source
   topic: cat-facts
   create-topic: true
 http:

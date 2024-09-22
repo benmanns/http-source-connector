@@ -1,7 +1,7 @@
 meta:
   version: latest
   name: http-json-connector
-  type: http-source
+  type: benmanns/http-source
   topic: TOPIC
   create_topic: false
 http:

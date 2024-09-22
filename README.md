@@ -1,5 +1,7 @@
 # Fluvio HTTP Inbound Connector
 
+**Note: This is the non-upstreamable branch of Benjamin Manns's fork of the Fluvio HTTP Inbound Connector, which is deployed as benmanns/http-source. Ideally, any runtime changes here will be merged back into the upstream InfinyOn repository.**
+
 Read HTTP Responses given input HTTP request configuration options and produce them
 to Fluvio topics.
 
@@ -47,7 +49,7 @@ apiVersion: 0.1.0
 meta:
   version: 0.3.8
   name: cat-facts
-  type: http-source
+  type: benmanns/http-source
   topic: cat-facts
   create-topic: true
   secrets:
@@ -77,7 +79,7 @@ apiVersion: 0.1.0
 meta:
   version: 0.3.8
   name: cat-facts
-  type: http-source
+  type: benmanns/http-source
   topic: cat-facts
   create-topic: true
   secrets:
@@ -103,7 +105,7 @@ apiVersion: 0.1.0
 meta:
   version: 0.3.8
   name: cat-facts
-  type: http-source
+  type: benmanns/http-source
   topic: cat-facts
   create-topic: true
 http:
@@ -143,7 +145,7 @@ apiVersion: 0.1.0
 meta:
   version: 0.3.8
   name: wiki-updates
-  type: http-source
+  type: benmanns/http-source
   topic: wiki-updates
 http:
   endpoint: "https://stream.wikimedia.org/v2/stream/recentchange"
@@ -161,7 +163,7 @@ apiVersion: 0.1.0
 meta:
   version: 0.3.8
   name: websocket-connector
-  type: http-source
+  type: benmanns/http-source
   topic: websocket-updates
 http:
   endpoint: ws://websocket.example/websocket

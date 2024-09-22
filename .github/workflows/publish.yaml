@@ -16,12 +16,14 @@ on:
 
 jobs:
   publish:
-    uses: infinyon/fluvio/.github/workflows/connector-publish.yml@master
+    uses: ./.github/workflows/connector-publish.yml
     with:
       package-name: http-source
       branch: ${{ github.event.inputs.branch }}
       fail-fast: false
       readme: ./README.md
     secrets:
-      CLOUD_USER_EMAIL: ${{ secrets.HUB_USER_EMAIL }}
-      CLOUD_USER_PASSWORD: ${{ secrets.HUB_USER_PASSWORD }}
+      FLUVIO_CONFIG: ${{ secrets.FLUVIO_CONFIG }}
+      FLUVIO_HUB_DEFAULT: ${{ secrets.FLUVIO_HUB_DEFAULT }}
+      FLUVIO_LOGINS_KEY: ${{ secrets.FLUVIO_LOGINS_KEY }}
+      FLUVIO_LOGINS_CONTENT: ${{ secrets.FLUVIO_LOGINS_CONTENT }}
