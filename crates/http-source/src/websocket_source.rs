@@ -2,7 +2,7 @@ use anyhow::{Context, Result};
 use async_trait::async_trait;
 use fluvio::Offset;
 use fluvio_connector_common::{
-    tracing::{debug, error, info},
+    tracing::{debug, error, info, warn},
     Source,
 };
 use futures::{
@@ -30,7 +30,7 @@ pub(crate) struct WebSocketSource {
 #[derive(Clone)]
 struct WSRequest {
     request: tungstenite::handshake::client::Request,
-    subscription_message: Option<String>,
+    subscription_messages: Option<Vec<String>>,
 }
 
 type Transport = MaybeTlsStream<TcpStream>;
@@ -59,8 +59,10 @@ async fn establish_connection(request: WSRequest) -> Result<WebSocketStream<Tran
     match connect_async(request.request.clone()).await {
         Ok((mut ws_stream, _)) => {
             info!("WebSocket connected to {}", &request.request.uri());
-            if let Some(message) = request.subscription_message.as_ref() {
-                ws_stream.send(Message::Text(message.to_owned())).await?;
+            if let Some(messages) = request.subscription_messages.as_ref() {
+                for message in messages {
+                    ws_stream.send(Message::Text(message.to_owned())).await?;
+                }
             }
             Ok(ws_stream)
         }
@@ -152,10 +154,23 @@ impl WebSocketSource {
             }
         }
 
+        let subscription_messages = if let Some(ws_config) = ws_config {
+            if let Some(messages) = ws_config.subscription_messages.as_ref() {
+                Some(messages.clone())
+            } else if let Some(message) = ws_config.subscription_message.as_ref() {
+                warn!("`subscription_message` is deprecated, please use `subscription_messages` instead");
+                Some(vec![message.to_owned()])
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+
         Ok(Self {
             request: WSRequest {
                 request,
-                subscription_message: ws_config.and_then(|c| c.subscription_message.to_owned()),
+                subscription_messages,
             },
             ping_interval_ms: ws_config.and_then(|c| c.ping_interval_ms).unwrap_or(10_000),
         })
